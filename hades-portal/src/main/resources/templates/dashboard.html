@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard | Lockr Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<!-- Navigation bar -->
+<nav class="bg-blue-600 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Lockr Encryption Portal</h1>
+        <div>
+            <span class="mr-4" th:text="'Welcome, ' + ${username}">Welcome, user</span>
+            <a th:href="@{/logout}" class="px-3 py-2 bg-white text-blue-600 rounded hover:bg-blue-100 transition">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Main dashboard section -->
+<div class="max-w-5xl mx-auto mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
+    <!-- Encrypt card -->
+    <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+        <h2 class="text-xl font-semibold mb-4">Encrypt a File</h2>
+        <form th:action="@{/encrypt}" method="post" enctype="multipart/form-data" class="space-y-4">
+            <input type="file" name="file" required class="w-full border rounded px-3 py-2"/>
+            <input type="text" name="symmetricKey" placeholder="Symmetric Key" required class="w-full border rounded px-3 py-2"/>
+            <input type="number" name="rounds" placeholder="Rounds" min="1" required class="w-full border rounded px-3 py-2"/>
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Encrypt</button>
+        </form>
+        <div id="encryptsuccessMessage"
+             th:if="${message1 != null and !#strings.isEmpty(message1)}"
+             th:text="${message1}"
+             class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative max-w-5xl mx-auto mt-4">
+        </div>
+    </div>
+
+    <!-- Decrypt card -->
+    <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+        <h2 class="text-xl font-semibold mb-4">Decrypt a File</h2>
+        <form th:action="@{/decrypt}" method="post" enctype="multipart/form-data" class="space-y-4">
+            <input type="file" name="encryptedFile" required class="w-full border rounded px-3 py-2" />
+            <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">Decrypt</button>
+        </form>
+        <div id="decryptsuccessMessage"
+             th:if="${message2 != null and !#strings.isEmpty(message2)}"
+             th:text="${message2}"
+             class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative max-w-5xl mx-auto mt-4">
+        </div>
+    </div>
+</div>
+
+<!-- File share section -->
+
+<div class="max-w-5xl mx-auto mt-6 px-4">
+    <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+        <h2 class="text-xl font-semibold mb-4">Share an Encrypted File</h2>
+        <form th:action="@{/share}" method="post" enctype="multipart/form-data" class="space-y-4">
+            <input type="file" name="encryptedFile" required class="w-full border rounded px-3 py-2" />
+            <input type="text" name="recipientUsername" placeholder="Recipient Username" required class="w-full border rounded px-3 py-2" />
+            <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700">Share File</button>
+        </form>
+        <div id="filesharedsuccessMessage"
+             th:if="${message3 != null and !#strings.isEmpty(message3)}"
+             th:text="${message3}"
+             class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative max-w-5xl mx-auto mt-4">
+        </div>
+    </div>
+</div>
+
+<!-- Decrypted file content section -->
+<div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition mt-6 mx-auto max-w-4xl w-full">
+        <h2 class="text-xl font-semibold mb-4 text-center">Decrypted File Content</h2>
+        <div class="mt-4" th:if="${decryptedContent}">
+            <textarea readonly class="w-full border rounded px-3 py-2 mt-2 bg-gray-100" rows="10"
+                      th:text="${decryptedContent}"></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white text-center py-4 mt-10">
+    <div class="max-w-7xl mx-auto text-center">
+        <p>&copy; 2025 Lockr Encryption Portal. All rights reserved.</p>
+        <p>Made with ❤️ by Team</p>
+    </div>
+</footer>
+
+<script>
+    // Hide the success message after 10 seconds
+    document.addEventListener("DOMContentLoaded", function () {
+        const successMessage1 = document.getElementById("encryptsuccessMessage");
+        if (successMessage1) {
+            setTimeout(() => {
+                successMessage1.style.display = "none";
+            }, 8000); // 8000ms = 8 seconds
+        }
+    });
+    // Hide the success message after 10 seconds
+    document.addEventListener("DOMContentLoaded", function () {
+        const successMessage2 = document.getElementById("decryptsuccessMessage");
+        if (successMessage2) {
+            setTimeout(() => {
+                successMessage2.style.display = "none";
+            }, 8000); // 8000ms = 8 seconds
+        }
+    });
+    // Hide the success message after 10 seconds
+    document.addEventListener("DOMContentLoaded", function () {
+        const successMessage3 = document.getElementById("filesharedsuccessMessage");
+        if (successMessage3) {
+            setTimeout(() => {
+                successMessage3.style.display = "none";
+            }, 8000); // 8000ms = 8 seconds
+        }
+    });
+</script>
+</body>
+</html>
